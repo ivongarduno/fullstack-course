@@ -1,0 +1,12 @@
+title new note SPA
+
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Server --> Browser: responds with status code 201 created
+
+note over Browser:
+content-Type tells the server that the included data is represented in the JSON format.
+end note
+
+note over Server:
+{content: "second note from Mexico", date: "2020-07-31T03:34:33.039Z"}
+end note

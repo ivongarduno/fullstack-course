@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const App = (props) => {
+const App = ({anecdotes}) => {
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0]);
   const [valueMostVotes, setValueMostVotes] = useState(0);
@@ -18,7 +18,7 @@ const App = (props) => {
   }, [votes]);
 
   const handleAnecdote = () => {
-    setSelected(Math.floor(Math.random() * (6 - 0)));
+    setSelected(Math.floor(Math.random() * anecdotes.length))
   };
 
   const handleVotes = (value) => {
@@ -30,12 +30,12 @@ const App = (props) => {
   return (
     <div>
       <h3>Anecdote of the day</h3>
-      <p>{props.anecdotes[selected]}</p>
+      <p>{anecdotes[selected]}</p>
       <p>Has {votes[selected]}</p>
       <button onClick={() => handleVotes(selected)}>vote</button>
       <button onClick={handleAnecdote}>next anecdote</button>
       <h3>Anecdote with most votes</h3>
-      <p>{props.anecdotes[mostVotes]}</p>
+      <p>{anecdotes[mostVotes]}</p>
       <p>Has {valueMostVotes}</p>
     </div>
   );

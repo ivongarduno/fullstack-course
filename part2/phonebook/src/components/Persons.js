@@ -5,7 +5,7 @@ const Persons = ({ filteredNames }) => {
     <ul>
       {filteredNames.map((person) => {
         return (
-          <li>
+          <li key={person.id}>
             {person.name} {person.number}
           </li>
         );

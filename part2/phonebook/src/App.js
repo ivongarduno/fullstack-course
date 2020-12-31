@@ -11,12 +11,14 @@ const App = () => {
   const [searchName, setSearchName] = useState("");
   const [persons, setPersons] = useState([]);
 
-  useEffect(() => {
+  const hook = () => {
     personService.getAll().then((initialPersons) => {
       // console.log(initialPersons);
       setPersons(initialPersons);
     });
-  }, []);
+  };
+
+  useEffect(hook, []);
 
   const [filteredNames, setFilteredNames] = useState([]);
 
@@ -56,7 +58,25 @@ const App = () => {
         (element) => element.name.toLowerCase() === noteName.name.toLowerCase()
       )
     ) {
-      alert(`${noteName.name} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${noteName.name} is already added to phonebook, replace the old number with a new one`
+        )
+      ) {
+        const personUpdate = persons.find(
+          (element) =>
+            element.name.toLowerCase() === noteName.name.toLowerCase()
+        );
+        personService
+          .update(personUpdate.id, noteName)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== personUpdate.id ? person : returnedPerson
+              )
+            );
+          });
+      }
     } else {
       personService
         .create(noteName)
@@ -68,9 +88,7 @@ const App = () => {
 
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}`)) {
-      personService
-        .deletePerson(person.id)
-        .then((deletedPerson) => console.log(deletedPerson));
+      personService.deletePerson(person.id).then((deletedPerson) => hook());
     }
   };
 

@@ -93,7 +93,7 @@ const App = () => {
       }
     } else {
       personService.create(noteName).then((createdPerson) => {
-        setPersons(persons.concat(createdPerson));
+        setPersons(createdPerson);
         setSuccessMessage(`${noteName.name} was created successfully`);
         setTimeout(() => {
           setSuccessMessage(null);

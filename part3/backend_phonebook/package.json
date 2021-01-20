@@ -8,16 +8,8 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ivongarduno/FullStackCourse-Backend.git"
-  },
   "author": "Blanca Ivon",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ivongarduno/FullStackCourse-Backend/issues"
-  },
-  "homepage": "https://github.com/ivongarduno/FullStackCourse-Backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",

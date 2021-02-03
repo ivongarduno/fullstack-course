@@ -1,32 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
 app.use(express.json());
-const cors = require('cors')
-app.use(cors())
+const cors = require("cors");
+app.use(cors());
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2,
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4,
-  },
-];
+const Phone = require("./models/phone");
 
 morgan.token("type", function (req, res) {
   return req.headers["content-type"];
@@ -41,54 +21,56 @@ app.use(
 );
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Phone.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 app.get("/info", (request, response) => {
-  const numberPeople = persons.length;
-  const date = new Date();
-  response.send(
-    `<p>Phonebook has info for ${numberPeople} people</p><p>${date}</p>`
-  );
+  Phone.find({}).then((persons) => {
+    const date = new Date();
+    response.send(
+      `<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`
+    );
+  });
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((person) => person.id === id);
-  person ? response.json(person) : response.status(404).end();
+  Phone.findById(request.params.id).then((phone) => {
+    response.json(phone);
+  });
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.find((person) => person.id === id);
-  response.status(204).end();
-});
-
-const generateId = () => {
-  const personId = Math.floor(Math.random() * 1000);
-  return personId;
-};
+// app.delete("/api/persons/:id", (request, response) => {
+//   const id = Number(request.params.id);
+//   persons = persons.find((person) => person.id === id);
+//   response.status(204).end();
+// });
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
+  // let personsTotal = {};
+  // Phone.find({}).then((persons) => {
+  //   personsTotal = persons;
+  // });
 
   if (body.name.length === 0 || body.number.length === 0) {
     return response.status(400).json({
       error: "Enter the data",
     });
-  } else if (persons.find((person) => person.name === body.name)) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
+    // } else if (personsTotal.find((person) => person.name === body.name)) {
+    //   return response.status(400).json({
+    //     error: "name must be unique",
+    //   });
   } else {
-    const person = {
+    const phone = new Phone({
       name: body.name,
       number: body.number,
-      id: generateId(),
-    };
+    });
 
-    persons = persons.concat(person);
-    response.json(persons);
+    phone.save().then((savedPhone) => {
+      response.json(savedPhone);
+    });
   }
 });
 
